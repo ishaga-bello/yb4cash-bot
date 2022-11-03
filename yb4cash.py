@@ -62,6 +62,9 @@ def like(job_url, screenshot_folder=folder):
         os.makedirs(screenshot_folder)
     
     job_desc = urlparse(job_url).path.strip('/')
+    if 'reel' in job_desc:
+        job_desc = job_desc.split('/')[1]
+    
     screenshot_name = job_desc + "_screenshot" + ".png"
     screenshot_path = os.path.join(screenshot_folder, screenshot_name)
     
@@ -138,45 +141,49 @@ def submit_job(job_link):
     # go to register jobs
     driver.find_element(By.XPATH, "//*[@id='app']/div[2]/div/div/div[4]/div[1]/img").click()
     # get upload input links
-    sleep(5)
+    sleep(3)
     div_boxes = driver.find_elements(By.CLASS_NAME, "card.ar-text")[1:]
     for element in div_boxes:
         div_item = element.find_element(By.CLASS_NAME, 'info')
         i = div_item.find_elements(By.TAG_NAME, 'i')
         if i[2].get_attribute("data-text") == job_link:
             submit_box = element
-            upload_button = element.find_element(By.CLASS_NAME, 'btn.van-button.van-button--default.van-button--normal.van-button--block')
 
     upload = submit_box.find_element(By.CLASS_NAME, 'van-uploader__input')
     url_path = urlparse(job_link).path.strip('/')
+    if 'reel' in job_link:
+        url_path = url_path.split('/')[1]
     os.chdir(folder)
     screenshots = os.listdir()
     for shot in screenshots:
         if url_path in shot:
-            # file_name = shot
             file_path = os.path.abspath(shot)
             upload.send_keys(file_path)
             # click submit    
-            upload_button.click()
+    
+    sleep(5)
+    #click submit
+    submit_box.find_element(By.TAG_NAME, 'button').click()
 
     os.chdir('..')
         
 
 if __name__ == "__main__":
     fb_login()
-    sleep(5)
+    sleep(2)
     yb_login()
     # get_tasks()
     job_urls = get_job_links()
-    for link in job_urls:
-        print('liking: ', like)
-        sleep(random.randint(2,10))
-        like(link)
+    link = random.choice(job_urls) 
+    # for link in job_urls:
+    print('liking: ', link)
+    sleep(random.randint(2,5))
+    like(link)
 
     yb_login()
-    for link in job_urls:
-        print('submitting_job: ', link)
-        submit_job(link)
+    # for link in job_urls:
+    print('submitting_job: ', link)
+    submit_job(link)
 
     # input("press to close")
     # driver.quit()
