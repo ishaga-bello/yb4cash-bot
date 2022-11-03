@@ -1,0 +1,6 @@
+*.env
+*.png
+/venv
+*.zip
+chromedriver
+
