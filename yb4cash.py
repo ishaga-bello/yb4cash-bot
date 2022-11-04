@@ -49,18 +49,23 @@ def fb_login():
     if save_login:
         sleep(random.randint(2,5))
         save_login.click()
+    
+    sleep(2)
 
 def like(job_url, screenshot_folder=folder):
     driver.get(job_url)
     sleep(random.randint(2,5))
 
+    print('liking: ', link)
     driver.find_element(By.LINK_TEXT, "Like").click()
-    sleep(random.randint(2,5))
+    sleep(random.randint(1,2))
+    print('Done')
 
     # if path does not exist create
     if not os.path.exists(screenshot_folder):
         os.makedirs(screenshot_folder)
     
+    # split job url
     job_desc = urlparse(job_url).path.strip('/')
     if 'reel' in job_desc:
         job_desc = job_desc.split('/')[1]
@@ -69,7 +74,10 @@ def like(job_url, screenshot_folder=folder):
     screenshot_path = os.path.join(screenshot_folder, screenshot_name)
     
     # save screenshot
+    print('Saving...')
     driver.save_screenshot(screenshot_path)
+    sleep(random.randint(2,5))
+    print('Done')
 
 def yb_login():
     mail = os.environ.get("YB4CASH_NUMBER")
@@ -104,18 +112,17 @@ def yb_login():
     except NoSuchElementException:
         sleep(5)
 
-    # close_first_ad
-    # driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[10]/div[2]/i").click()
-    # # close_scnd_ad
-    # driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[9]/div[2]/i").click()
-
 def get_tasks():
     # task_hall
     driver.find_element(By.XPATH, "//*[@id='app']/div[2]/div/div/div[2]/div[1]/img").click()
     # get_jobs
     driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[2]/div/div[2]/div[1]/div/div[2]/div/div[3]/button").click()
     # get 4 jobs
+    # simply change the initial 2 + the amount of jobs you want
+    # the bot to do
+    # to do 4 jobs -> 2 + 4 = 6
     for i in range(2, 6):
+        sleep(1)
         driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[2]/div/div/div[2]/div[{}]/div/div[2]/div[1]/div[2]/button".format(i)).click() 
     # go back
     driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[1]/div/div/div/div[1]/i").click()
@@ -138,6 +145,7 @@ def get_job_links():
     return job_links
 
 def submit_job(job_link):
+    sleep(random.randint(2,5))
     # go to register jobs
     driver.find_element(By.XPATH, "//*[@id='app']/div[2]/div/div/div[4]/div[1]/img").click()
     # get upload input links
@@ -155,6 +163,7 @@ def submit_job(job_link):
         url_path = url_path.split('/')[1]
     os.chdir(folder)
     screenshots = os.listdir()
+    print('submitting_job: ', link)
     for shot in screenshots:
         if url_path in shot:
             file_path = os.path.abspath(shot)
@@ -166,24 +175,19 @@ def submit_job(job_link):
     submit_box.find_element(By.TAG_NAME, 'button').click()
 
     os.chdir('..')
+    print('Done...')
         
 
 if __name__ == "__main__":
     fb_login()
-    sleep(2)
     yb_login()
     # get_tasks()
     job_urls = get_job_links()
-    link = random.choice(job_urls) 
-    # for link in job_urls:
-    print('liking: ', link)
-    sleep(random.randint(2,5))
-    like(link)
-
+    for link in job_urls:
+        like(link)
     yb_login()
-    # for link in job_urls:
-    print('submitting_job: ', link)
-    submit_job(link)
+    for link in job_urls:
+        submit_job(link)
 
     # input("press to close")
     # driver.quit()
