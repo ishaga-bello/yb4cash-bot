@@ -1,5 +1,5 @@
-# Finally free money generator bot
-Make money without working!!! Just programming magic
+# Finally a free money generator bot
+Just programming magic!!!
 
 ## Bot at work
 
@@ -43,7 +43,7 @@ In its current state this bot those exactly what it needs to do. However, improv
 
 I made this bot so everyone can contribute, any contribution will be welcomed :)
 
-[] Add other social network platforms(Tiktok, Instagram, etc)
-[] Make the whole process more user friendly
-[] Optimise the code
-[] Make everything run smooth without users interacting with the code
+- [ ] Add other social network platforms(Tiktok, Instagram, etc)
+- [ ] Make the whole process more user friendly
+- [ ] Optimise the code
+- [ ] Make everything run smooth without users interacting with the code
