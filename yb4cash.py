@@ -189,5 +189,6 @@ if __name__ == "__main__":
     for link in job_urls:
         submit_job(link)
 
+    # this should be uncommented
     # input("press to close")
     # driver.quit()
