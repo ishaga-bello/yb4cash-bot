@@ -16,6 +16,7 @@ load_dotenv(dotenv_path)
 
 mobile_emulation = { "deviceName": "iPhone 8" }
 chrome_options = webdriver.ChromeOptions()
+# uncomment this to run the browser in headless mode (background)
 # chrome_options.headless = True
 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 driver = webdriver.Chrome(executable_path="./chromedriver",options=chrome_options)
@@ -177,8 +178,7 @@ def submit_job(job_link):
     os.chdir('..')
     print('Done...')
         
-
-if __name__ == "__main__":
+def main():
     fb_login()
     yb_login()
     # get_tasks()
@@ -189,6 +189,8 @@ if __name__ == "__main__":
     for link in job_urls:
         submit_job(link)
 
-    # this should be uncommented
-    # input("press to close")
-    # driver.quit()
+    # this should be uncommented to close the browser
+    driver.quit()
+
+if __name__ == "__main__":
+    main()
