@@ -57,7 +57,7 @@ def like(job_url, screenshot_folder=folder):
     driver.get(job_url)
     sleep(random.randint(2,5))
 
-    print('liking: ', link)
+    print('liking: ', job_url)
     driver.find_element(By.LINK_TEXT, "Like").click()
     sleep(random.randint(1,2))
     print('Done')
@@ -164,7 +164,7 @@ def submit_job(job_link):
         url_path = url_path.split('/')[1]
     os.chdir(folder)
     screenshots = os.listdir()
-    print('submitting_job: ', link)
+    print('submitting_job: ', job_link)
     for shot in screenshots:
         if url_path in shot:
             file_path = os.path.abspath(shot)
