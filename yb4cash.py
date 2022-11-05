@@ -19,9 +19,9 @@ load_dotenv(dotenv_path)
 mobile_emulation = { "deviceName": "iPhone 8" }
 chrome_options = webdriver.ChromeOptions()
 # uncomment this to run the browser in headless mode (background)
-# chrome_options.headless = True
+chrome_options.headless = True
 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 folder = "./screenshots/"
 
@@ -111,21 +111,26 @@ def yb_login():
             #  click on login
             login = driver.find_element(By.CLASS_NAME, "loginbtn")
             login.click()
+            sleep(5)
     except NoSuchElementException:
         sleep(5)
 
 def get_tasks():
+    sleep(5)
     # task_hall
     driver.find_element(By.XPATH, "//*[@id='app']/div[2]/div/div/div[2]/div[1]/img").click()
     # get_jobs
     driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[2]/div/div[2]/div[1]/div/div[2]/div/div[3]/button").click()
+    
     # get 4 jobs
     # simply change the initial 2 + the amount of jobs you want
     # the bot to do
     # to do 4 jobs -> 2 + 4 = 6
-    for i in range(2, 6):
+    for i in range(1, 3):
+        print('get task', i)
+        driver.find_elements(By.TAG_NAME, "button")[i].click() 
         sleep(1)
-        driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[2]/div/div/div[2]/div[{}]/div/div[2]/div[1]/div[2]/button".format(i)).click() 
+
     # go back
     driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[1]/div/div/div/div[1]/i").click()
 
@@ -178,20 +183,21 @@ def submit_job(job_link):
 
     os.chdir('..')
     print('Done...')
+    sleep(5)
         
 def main():
-    fb_login()
+    # fb_login()
     yb_login()
-    # get_tasks()
-    job_urls = get_job_links()
-    for link in job_urls:
-        like(link)
-    yb_login()
-    for link in job_urls:
-        submit_job(link)
+    get_tasks()
+    # job_urls = get_job_links()
+    # for link in job_urls:
+    #     like(link)
+    # yb_login()
+    # for link in job_urls:
+    #     submit_job(link)
 
     # this should be uncommented to close the browser
-    driver.quit()
+    # driver.quit()
 
 if __name__ == "__main__":
     main()
