@@ -19,15 +19,15 @@ load_dotenv(dotenv_path)
 mobile_emulation = { "deviceName": "iPhone 8" }
 chrome_options = webdriver.ChromeOptions()
 # uncomment this to run the browser in headless mode (background)
-chrome_options.headless = True
+# chrome_options.headless = True
 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+driver.implicitly_wait(30)
 
 folder = "./screenshots/"
 
 def fb_login():
     url = "http://www.facebook.com/"
-    driver.implicitly_wait(10)
     driver.get(url)
 
     sleep(random.randint(2,5))
@@ -46,6 +46,7 @@ def fb_login():
     
     login = driver.find_element(By.NAME, "login")
     login.click()
+    sleep(5)
 
     save_login = driver.find_element(By.XPATH, "//*[@id='root']/div[1]/div/div/div[3]/div[2]/form/div/button")
     if save_login:
@@ -189,12 +190,12 @@ def main():
     # fb_login()
     yb_login()
     get_tasks()
-    # job_urls = get_job_links()
-    # for link in job_urls:
-    #     like(link)
-    # yb_login()
-    # for link in job_urls:
-    #     submit_job(link)
+    job_urls = get_job_links()
+    for link in job_urls:
+        like(link)
+    yb_login()
+    for link in job_urls:
+        submit_job(link)
 
     # this should be uncommented to close the browser
     # driver.quit()
