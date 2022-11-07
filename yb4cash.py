@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import NoSuchElementException
 
+import schedule
 from time import sleep
 import random
 import os
@@ -57,8 +58,7 @@ def fb_login():
 
 def like(job_url, screenshot_folder=folder):
     driver.get(job_url)
-    sleep(random.randint(5,9))
-
+    sleep(20)
     print('liking: ', job_url)
     try:
         driver.find_element(By.LINK_TEXT, "Like").click()
@@ -199,15 +199,24 @@ def main():
     
     fb_login()
     sleep(2)
-    for link in job_urls:
-        sleep(2) 
-        like(link)
+    #for link in job_urls:
+    #    sleep(2) 
+    like(job_urls[-1])
     yb_login()
     for link in job_urls:
        submit_job(link)
 
     #this should be uncommented to close the browser
     driver.quit()
+
+#time_list = ["10:30", "15:25", "12:10", "08:50", "13:40", "18:50", "16:20"]
+#time_today = random.choice(time_list)
+#schedule.every().day.at(time_today).do(main)
+
+#while True:
+#    schedule.run_pending()
+#    time.sleep(1)
+#    time_today = random.choice(time_list)
 
 if __name__ == "__main__":
     main()
