@@ -62,12 +62,9 @@ def like(job_url, screenshot_folder=folder):
     print('liking: ', job_url)
 
     try:
-        driver.find_element(By.LINK_TEXT, "Like").click()
+        driver.find_element(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]").click()
     except NoSuchElementException:
-        try:
-            driver.find_element(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]").click()
-        except NoSuchElementException:
-            return
+        return
 
     sleep(random.randint(3,5))
     
