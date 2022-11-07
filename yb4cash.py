@@ -19,7 +19,7 @@ load_dotenv(dotenv_path)
 mobile_emulation = { "deviceName": "iPhone 8" }
 chrome_options = webdriver.ChromeOptions()
 # uncomment this to run the browser in headless mode (background)
-chrome_options.headless = True
+# chrome_options.headless = True
 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.implicitly_wait(30)
@@ -60,10 +60,14 @@ def like(job_url, screenshot_folder=folder):
     sleep(random.randint(5,9))
 
     print('liking: ', job_url)
-    try:
-        driver.find_element(By.LINK_TEXT, "Like").click()
-    except NoSuchElementException:
+    
+    if driver.find_elements(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]"):
         driver.find_element(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]").click()
+    elif driver.find_elements(By.LINK_TEXT, "Like"):
+        driver.find_element(By.LINK_TEXT, "Like")
+    else:
+        return
+
     sleep(random.randint(3,5))
     print('Done')
 
@@ -199,15 +203,15 @@ def main():
     
     fb_login()
     sleep(2)
-    for link in job_urls:
-        sleep(2) 
-        like(link)
-    yb_login()
-    for link in job_urls:
-       submit_job(link)
+    # for link in job_urls[:2]:
+    #     sleep(2) 
+    like(job_urls[0])
+    # yb_login()
+    # for link in job_urls[:2]:
+    #    submit_job(link)
 
     #this should be uncommented to close the browser
-    driver.quit()
+    # driver.quit()
 
 if __name__ == "__main__":
     main()
