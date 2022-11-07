@@ -19,7 +19,7 @@ load_dotenv(dotenv_path)
 mobile_emulation = { "deviceName": "iPhone 8" }
 chrome_options = webdriver.ChromeOptions()
 # uncomment this to run the browser in headless mode (background)
-# chrome_options.headless = True
+chrome_options.headless = True
 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.implicitly_wait(30)
@@ -53,15 +53,18 @@ def fb_login():
         sleep(random.randint(2,5))
         save_login.click()
     
-    sleep(2)
+    sleep(random.randint(3,5))
 
 def like(job_url, screenshot_folder=folder):
     driver.get(job_url)
-    sleep(random.randint(2,5))
+    sleep(random.randint(5,9))
 
     print('liking: ', job_url)
-    driver.find_element(By.LINK_TEXT, "Like").click()
-    sleep(random.randint(1,2))
+    try:
+        driver.find_element(By.LINK_TEXT, "Like").click()
+    except NoSuchElementException:
+        driver.find_element(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]").click()
+    sleep(random.randint(3,5))
     print('Done')
 
     # if path does not exist create
@@ -117,21 +120,24 @@ def yb_login():
         sleep(5)
 
 def get_tasks():
-    sleep(5)
+    sleep(3)
     # task_hall
     driver.find_element(By.XPATH, "//*[@id='app']/div[2]/div/div/div[2]/div[1]/img").click()
+    sleep(3)
     # get_jobs
     driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[2]/div/div[2]/div[1]/div/div[2]/div/div[3]/button").click()
     
+    sleep(5)
     # get 4 jobs
-    # simply change the initial 2 + the amount of jobs you want
+    # simply change the initial 1 + the amount of jobs you want
     # the bot to do
-    # to do 4 jobs -> 2 + 4 = 6
+    # to do 4 jobs -> 1 + 4 = 5
     for i in range(1, 3):
         print('get task', i)
         driver.find_elements(By.TAG_NAME, "button")[i].click() 
         sleep(1)
-
+    
+    sleep(2)
     # go back
     driver.find_element(By.XPATH, "//*[@id='app']/div[1]/div/div[1]/div/div/div/div[1]/i").click()
 
@@ -187,18 +193,21 @@ def submit_job(job_link):
     sleep(5)
         
 def main():
-    # fb_login()
     yb_login()
-    get_tasks()
+    #get_tasks()
     job_urls = get_job_links()
+    
+    fb_login()
+    sleep(2)
     for link in job_urls:
+        sleep(2) 
         like(link)
     yb_login()
     for link in job_urls:
-        submit_job(link)
+       submit_job(link)
 
-    # this should be uncommented to close the browser
-    # driver.quit()
+    #this should be uncommented to close the browser
+    driver.quit()
 
 if __name__ == "__main__":
     main()
