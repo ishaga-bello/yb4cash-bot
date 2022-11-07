@@ -20,7 +20,7 @@ load_dotenv(dotenv_path)
 mobile_emulation = { "deviceName": "iPhone 8" }
 chrome_options = webdriver.ChromeOptions()
 # uncomment this to run the browser in headless mode (background)
-chrome_options.headless = True
+# chrome_options.headless = True
 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.implicitly_wait(30)
@@ -60,30 +60,34 @@ def like(job_url, screenshot_folder=folder):
     driver.get(job_url)
     sleep(20)
     print('liking: ', job_url)
-    try:
-        driver.find_element(By.LINK_TEXT, "Like").click()
-    except NoSuchElementException:
-        driver.find_element(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]").click()
-    sleep(random.randint(3,5))
-    print('Done')
+    while True:
+        try:
+            driver.find_element(By.LINK_TEXT, "Like").click()
+        except NoSuchElementException:
+            driver.find_element(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]").click()
+        except:
+            break
+        sleep(random.randint(3,5))
+        
+        print('Done')
 
-    # if path does not exist create
-    if not os.path.exists(screenshot_folder):
-        os.makedirs(screenshot_folder)
-    
-    # split job url
-    job_desc = urlparse(job_url).path.strip('/')
-    if 'reel' in job_desc:
-        job_desc = job_desc.split('/')[1]
-    
-    screenshot_name = job_desc + "_screenshot" + ".png"
-    screenshot_path = os.path.join(screenshot_folder, screenshot_name)
-    
-    # save screenshot
-    print('Saving...')
-    driver.save_screenshot(screenshot_path)
-    sleep(random.randint(2,5))
-    print('Done')
+        # if path does not exist create
+        if not os.path.exists(screenshot_folder):
+            os.makedirs(screenshot_folder)
+        
+        # split job url
+        job_desc = urlparse(job_url).path.strip('/')
+        if 'reel' in job_desc:
+            job_desc = job_desc.split('/')[1]
+        
+        screenshot_name = job_desc + "_screenshot" + ".png"
+        screenshot_path = os.path.join(screenshot_folder, screenshot_name)
+        
+        # save screenshot
+        print('Saving...')
+        driver.save_screenshot(screenshot_path)
+        sleep(random.randint(2,5))
+        print('Done')
 
 def yb_login():
     mail = os.environ.get("YB4CASH_NUMBER")
@@ -202,9 +206,9 @@ def main():
     #for link in job_urls:
     #    sleep(2) 
     like(job_urls[-1])
-    yb_login()
-    for link in job_urls:
-       submit_job(link)
+    # yb_login()
+    # for link in job_urls:
+    #    submit_job(link)
 
     #this should be uncommented to close the browser
     driver.quit()
