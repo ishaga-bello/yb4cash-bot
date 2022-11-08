@@ -20,7 +20,7 @@ load_dotenv(dotenv_path)
 mobile_emulation = { "deviceName": "iPhone 8" }
 chrome_options = webdriver.ChromeOptions()
 # uncomment this to run the browser in headless mode (background)
-# chrome_options.headless = True
+chrome_options.headless = True
 chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.implicitly_wait(30)
@@ -61,9 +61,12 @@ def like(job_url, screenshot_folder=folder):
     sleep(20)
     print('liking: ', job_url)
 
-    try:
+    if driver.find_elements(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]"):
         driver.find_element(By.XPATH, "//*[@id='screen-root']/div/div[2]/div[6]/div[6]/div[1]").click()
-    except NoSuchElementException:
+    elif driver.find_elements(By.LINK_TEXT, "Like"):
+        driver.find_element(By.LINK_TEXT, "Like")
+    else:
+        print('Error with link!!!\nSkipping...')
         return
 
     sleep(random.randint(3,5))
@@ -185,41 +188,38 @@ def submit_job(job_link):
         if url_path in shot:
             file_path = os.path.abspath(shot)
             upload.send_keys(file_path)
-            # click submit    
+            print('Done...') 
     
     sleep(5)
     #click submit
     submit_box.find_element(By.TAG_NAME, 'button').click()
 
     os.chdir('..')
-    print('Done...')
+
     sleep(5)
         
 def main():
     yb_login()
-    #get_tasks()
+    get_tasks()
     job_urls = get_job_links()
     
     fb_login()
     sleep(2)
-    #for link in job_urls:
-    #    sleep(2) 
-    like(job_urls[-1])
-    # yb_login()
-    # for link in job_urls:
-    #    submit_job(link)
+    for link in job_urls:
+        sleep(2) 
+        like(link)
+    yb_login()
+    for link in job_urls:
+       submit_job(link)
 
     #this should be uncommented to close the browser
     driver.quit()
 
-#time_list = ["10:30", "15:25", "12:10", "08:50", "13:40", "18:50", "16:20"]
-#time_today = random.choice(time_list)
-#schedule.every().day.at(time_today).do(main)
+time_list = ["10:30", "15:25", "12:10", "08:50", "13:40", "18:50", "16:20"]
+time_today = random.choice(time_list)
+schedule.every().day.at(time_today).do(main)
 
-#while True:
-#    schedule.run_pending()
-#    time.sleep(1)
-#    time_today = random.choice(time_list)
-
-if __name__ == "__main__":
-    main()
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+    time_today = random.choice(time_list)
