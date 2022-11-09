@@ -2,6 +2,9 @@
 Just programming magic!!!
 
 ## Bot at work
+[![https://imgur.com/fkITQmP.png](https://imgur.com/fkITQmP.png)](https://imgur.com/fkITQmP.png)
+
+All running on it's own in a server
 
 ## Motivation
 1 of my friends proposed me a way of making mooney online by simply liking social media posts.
@@ -17,11 +20,11 @@ we are in no way responsible of how you will use this bot.
 ## Installation
 1. Clone this repository git 
 
-2. Run ```pip install -r requirements.txt```
+2. Create a virtual environment ```python -m venv <name of virtual env>```
 
-3. Install Chromedriver
+3. Run ```pip install -r requirements.txt```
 
-4. edit the *.env* file by inserting your credentials
+4. create an *.env* file and insert your credentials
 
 ```
     FACEBOOK_MAIL="your facebook mail here or number"
